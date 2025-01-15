@@ -13,12 +13,8 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 White = (255, 255, 255)
 Black = (0, 0, 0)
+
 # Determines the time, and how fast it runs.
 FPS = 60
 clock = pygame.time.Clock()
 delta_time = 1
-#run = True
-# Affects the point of view.
-perspective = 1.0
-Cx = 0
-Cy = 0
