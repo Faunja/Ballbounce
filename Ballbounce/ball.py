@@ -27,6 +27,18 @@ def grab_ball(click):
 		if click == False and sphere.held == True:
 			sphere.held = False
 
+# Do not put count above 30 untill I fix this shit.
+# The issue lies within the define ball file in the ball collision function.
+def create_ball(count):
+	while len(dictionary) < count:
+		newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
+		for information in range(len(color_dictionary)):
+			if color_dictionary[information] == newcolor:
+				newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
+				information = 0
+		dictionary.append(Circle(newcolor))
+		color_dictionary.append(newcolor)
+
 def update_ball(sphere):
 	mouse_x, mouse_y = pygame.mouse.get_pos()
 	for other in dictionary:
@@ -36,17 +48,9 @@ def update_ball(sphere):
 	sphere.collision()
 
 def draw_ball():
-	# Do not put the maximum above 30 untill I fix this shit.
-	# The issue lies within the define ball file in the ball collision function.
-	while len(dictionary) < 10:
-		newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
-		for information in range(len(color_dictionary)):
-			if color_dictionary[information] == newcolor:
-				newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
-				information = 0
-		dictionary.append(Circle(newcolor))
-		color_dictionary.append(newcolor)
+	create_ball(20)
 	for sphere in dictionary:
 		update_ball(sphere)
 		pygame.draw.circle(screen, (0, 0, 0), (sphere.x[0], sphere.y[0]), sphere.radius)
 		pygame.draw.circle(screen, sphere.color, (sphere.x[0], sphere.y[0]), sphere.radius * (4 / 5))
+		
