@@ -17,9 +17,13 @@ def main():
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				if event.button == 1:
 					grab_ball(True)
+				if event.button == 3:
+					sling_ball(True)
 			if event.type == pygame.MOUSEBUTTONUP:
 				if event.button == 1:
 					grab_ball(False)
+				if event.button == 3:
+					sling_ball(False)
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
 					run = False
