@@ -5,7 +5,7 @@
 # If pygame is not installed: sudo apt install python3-pygame
 # To run: python3 Idlegame/main.py
 import pygame
-from background import draw_screen
+from background import draw_ball_background
 from ball import *
 from variables import *
 
@@ -29,7 +29,7 @@ def main():
 					random_ball()
 			if event.type == pygame.QUIT:
 				run = False
-		draw_screen()
+		draw_ball_background()
 		draw_ball()
 		delta_time = clock.tick(FPS)
 		pygame.display.set_caption(f'{clock.get_fps() :.1f}')
