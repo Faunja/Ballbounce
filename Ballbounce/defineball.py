@@ -46,8 +46,10 @@ class Circle:
 	def ball_collision(self, sphere):
 		x_diff = (self.x[0] - sphere.x[0])
 		y_diff = (self.y[0] - sphere.y[0])
-		if (math.sqrt(x_diff**2 + y_diff**2) <= self.radius + sphere.radius):
-			distance = self.radius + sphere.radius - math.sqrt(x_diff**2 + y_diff**2)
+		push_radius = self.radius + sphere.radius
+		
+		if (math.sqrt(x_diff**2 + y_diff**2) <= push_radius):
+			distance = push_radius - math.sqrt(x_diff**2 + y_diff**2)
 			if x_diff < 0:
 				self.x[0] -= distance
 				self.x[1] -= distance 
