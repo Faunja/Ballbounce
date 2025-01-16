@@ -34,7 +34,6 @@ def random_ball():
 		sphere.y[1] += random.randint(-100, 100)
 
 def draw_ball():
-	create_ball(16)
 	slinged = None
 	for sphere in dictionary:
 		update_ball(sphere)

@@ -9,11 +9,12 @@ dictionary = []
 color_dictionary = []
 
 class Circle:
-	def __init__(self, color):
+	def __init__(self, color, x_place, y_place):
 		self.color = color
-		self.x = [SCREEN_WIDTH / 2, 0]
-		self.y = [SCREEN_HEIGHT / 2, 0]
+		self.x = [x_place, 0]
+		self.y = [y_place, 0]
 		self.radius = SCREEN_HEIGHT / 16
+		self.friction = 9
 		self.held = False
 		self.sling = False
 	
@@ -24,15 +25,15 @@ class Circle:
 			self.y[1] = mouse_y - self.y[0]
 			self.y[0] = mouse_y
 		elif self.sling == True:
-			self.x[1] = mouse_x - self.x[0]
-			self.y[1] = mouse_y - self.y[0]
+			self.x[1] = (mouse_x - self.x[0]) / self.friction
+			self.y[1] = (mouse_y - self.y[0]) / self.friction
 		else:
 			self.x[0] += self.x[1]
-			self.x[1] *= .9
+			self.x[1] *= self.friction / 10
 			if -1 < self.x[1] < 1:
 				self.x[1] = 0
 			self.y[0] += self.y[1]
-			self.y[1] *= .9
+			self.y[1] *= self.friction / 10
 			if -1 < self.y[1] < 1:
 				self.y[1] = 0
 	
@@ -100,16 +101,24 @@ class Circle:
 
 # Do not put count above 16 untill I fix this shit.
 # The issue lies within the ball collision function.
-def create_ball(count):
-	while len(dictionary) < count:
-		newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
-		for information in range(len(color_dictionary)):
-			if color_dictionary[information] == newcolor:
-				newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
-				information = 0
-		dictionary.append(Circle(newcolor))
-		color_dictionary.append(newcolor)
+def create_ball():
+	mouse_x, mouse_y = pygame.mouse.get_pos()
+	newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
+	for information in range(len(color_dictionary)):
+		if color_dictionary[information] == newcolor:
+			newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
+			information = 0
+	dictionary.append(Circle(newcolor, mouse_x, mouse_y))
+	color_dictionary.append(newcolor)
 
+def delete_ball():
+	mouse_x, mouse_y = pygame.mouse.get_pos()
+	for sphere in dictionary:
+		if (math.sqrt((sphere.x[0] - mouse_x)**2 + (sphere.y[0] - mouse_y)**2) <= sphere.radius):
+			color_dictionary.remove(sphere.color)
+			dictionary.remove(sphere)
+			break
+		
 def update_ball(sphere):
 	mouse_x, mouse_y = pygame.mouse.get_pos()
 	for cylinder in dictionary:
@@ -117,3 +126,7 @@ def update_ball(sphere):
 			sphere.ball_collision(cylinder)
 	sphere.movement(mouse_x, mouse_y)
 	sphere.collision()
+
+
+
+

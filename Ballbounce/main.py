@@ -27,6 +27,12 @@ def main():
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
 					run = False
+				if event.key == pygame.K_RETURN:
+					if len(dictionary) < 16:
+						create_ball()
+				if event.key == pygame.K_BACKSPACE:
+					if len(dictionary) > 0:
+						delete_ball()
 				if event.key == pygame.K_s:
 					stop_ball()
 				if event.key == pygame.K_r:
