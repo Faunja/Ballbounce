@@ -74,28 +74,28 @@ class Circle:
 				collide = True
 		if collide == True:
 			distance = push_radius - math.sqrt(x_diff**2 + y_diff**2)
-			if x_diff < 0:
-				self.x[0] -= distance
-				self.x[1] -= distance 
-				sphere.x[1] += distance
-			elif x_diff > 0:
-				self.x[0] += distance
-				self.x[1] += distance
-				sphere.x[1] -= distance
+			if x_diff != 0 and y_diff != 0:
+				if x_diff < 0:
+					self.x[0] -= distance
+					self.x[1] -= distance 
+					sphere.x[1] += distance
+				elif x_diff > 0:
+					self.x[0] += distance
+					self.x[1] += distance
+					sphere.x[1] -= distance
+				if y_diff < 0:
+					self.y[0] -= distance
+					self.y[1] -= distance
+					sphere.y[1] += distance
+				elif y_diff > 0:
+					self.y[0] += distance
+					self.y[1] += distance
+					sphere.y[1] -= distance
 			else:
-				change = random.choice([-distance, distance]) / 2
+				change = random.choice([-push_radius, push_radius]) / 2
 				self.x[0] += change
 				sphere.x[0] -= change
-			if y_diff < 0:
-				self.y[0] -= distance
-				self.y[1] -= distance
-				sphere.y[1] += distance
-			elif y_diff > 0:
-				self.y[0] += distance
-				self.y[1] += distance
-				sphere.y[1] -= distance
-			else:
-				change = random.choice([-distance, distance]) / 2
+				change = random.choice([-push_radius, push_radius]) / 2
 				self.y[0] += change
 				sphere.y[0] -= change
 
