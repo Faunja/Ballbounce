@@ -11,6 +11,7 @@ from variables import *
 
 def main():
 	run = True
+	
 	while run:
 		clock.tick(FPS)
 		for event in pygame.event.get():

@@ -36,11 +36,11 @@ def random_ball():
 def draw_ball():
 	slinged = None
 	for sphere in dictionary:
-		update_ball(sphere)
 		pygame.draw.circle(screen, (0, 0, 0), (sphere.x[0], sphere.y[0]), sphere.radius)
 		pygame.draw.circle(screen, sphere.color, (sphere.x[0], sphere.y[0]), sphere.radius * (4 / 5))
 		if sphere.sling == True:
 			slinged = sphere
+		update_ball(sphere)
 	if slinged != None:
 		mouse_x, mouse_y = pygame.mouse.get_pos()
 		pygame.draw.circle(screen, (0, 0, 0), (mouse_x, mouse_y), slinged.radius / 2)

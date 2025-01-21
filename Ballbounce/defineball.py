@@ -73,24 +73,28 @@ class Circle:
 			if (math.sqrt(x_diff**2 + y_diff**2) <= push_radius):
 				collide = True
 		if collide == True:
-			distance = push_radius - math.sqrt(x_diff**2 + y_diff**2)
+			if math.sqrt(x_diff**2 + y_diff**2) > 1:
+				distance = math.sqrt(x_diff**2 + y_diff**2)
+			else:
+				distance = 1
 			if x_diff != 0 and y_diff != 0:
-				if x_diff < 0:
-					self.x[0] -= distance
-					self.x[1] -= distance 
-					sphere.x[1] += distance
-				elif x_diff > 0:
-					self.x[0] += distance
-					self.x[1] += distance
-					sphere.x[1] -= distance
-				if y_diff < 0:
-					self.y[0] -= distance
-					self.y[1] -= distance
-					sphere.y[1] += distance
-				elif y_diff > 0:
-					self.y[0] += distance
-					self.y[1] += distance
-					sphere.y[1] -= distance
+				x_push = None
+				y_push = None
+				if x_diff != 0:
+					x_change = [self.x[1] * (push_radius - abs(y_diff)) / push_radius * (push_radius / distance), sphere.x[1] * (push_radius - abs(y_diff)) / push_radius * (push_radius / distance)]
+					y_push = [self.x[1] * (1 - (push_radius - abs(y_diff)) / push_radius), sphere.x[1] * (1 - (push_radius - abs(y_diff)) / push_radius)]
+
+					self.x[1] = self.x[1] - x_change[0] + x_change[1]
+					sphere.x[1] = sphere.x[1] + x_change[0] - x_change[1]
+
+				if y_push != None:
+					if x_diff < 0 and y_diff > 0 or x_diff > 0 and y_diff < 0:
+						self.y[1] = self.y[1] + y_push[0] - y_push[1]
+						sphere.y[1] = sphere.y[1] - y_push[0] + y_push[1]
+					else:
+						self.y[1] = self.y[1] - y_push[0] + y_push[1]
+						sphere.y[1] = sphere.y[1] + y_push[0] - y_push[1]
+
 			else:
 				change = random.choice([-push_radius, push_radius]) / 2
 				self.x[0] += change
@@ -121,9 +125,12 @@ def delete_ball():
 		
 def update_ball(sphere):
 	mouse_x, mouse_y = pygame.mouse.get_pos()
+	can_collide = False
 	for cylinder in dictionary:
-		if cylinder.color != sphere.color:
+		if can_collide == True:
 			sphere.ball_collision(cylinder)
+		if cylinder.color == sphere.color:
+			can_collide = True
 	sphere.movement(mouse_x, mouse_y)
 	sphere.collision()
 
