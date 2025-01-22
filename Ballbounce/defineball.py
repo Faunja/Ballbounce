@@ -81,15 +81,15 @@ class Circle:
 
 			if x_diff != 0 and y_diff != 0:
 
-				x_push = None
+				y_push = None
 				if x_diff != 0:
 					x_change = [self.x[1] * (push_radius - abs(y_diff)) / push_radius * (push_radius / distance), sphere.x[1] * (push_radius - abs(y_diff)) / push_radius * (push_radius / distance)]
 					y_push = [self.x[1] * (1 - (push_radius - abs(y_diff)) / push_radius), sphere.x[1] * (1 - (push_radius - abs(y_diff)) / push_radius)]
 
 					self.x[1] = self.x[1] - x_change[0] + x_change[1]
 					sphere.x[1] = sphere.x[1] + x_change[0] - x_change[1]
-
-				y_push = None
+				
+				x_push = None
 				if y_diff != 0:
 					y_change = [self.y[1] * (push_radius - abs(x_diff)) / push_radius * (push_radius / distance), sphere.y[1] * (push_radius - abs(x_diff)) / push_radius * (push_radius / distance)]
 					x_push = [self.y[1] * (1 - (push_radius - abs(x_diff)) / push_radius), sphere.y[1] * (1 - (push_radius - abs(x_diff)) / push_radius)]
@@ -104,7 +104,7 @@ class Circle:
 					else:
 						self.x[1] = self.x[1] - x_push[0] + x_push[1]
 						sphere.x[1] = sphere.x[1] + x_push[0] - x_push[1]
-
+				
 				if y_push != None:
 					if x_diff < 0 and y_diff > 0 or x_diff > 0 and y_diff < 0:
 						self.y[1] = self.y[1] + y_push[0] - y_push[1]
