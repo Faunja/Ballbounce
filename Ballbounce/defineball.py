@@ -83,18 +83,24 @@ class Circle:
 
 				y_push = None
 				if x_diff != 0:
-					x_change = [self.x[1] * (push_radius - abs(y_diff)) / push_radius * (push_radius / distance), sphere.x[1] * (push_radius - abs(y_diff)) / push_radius * (push_radius / distance)]
-					y_push = [self.x[1] * (1 - (push_radius - abs(y_diff)) / push_radius), sphere.x[1] * (1 - (push_radius - abs(y_diff)) / push_radius)]
+					x_percent = (push_radius - abs(y_diff)) / push_radius
+					x_change = [self.x[1] * x_percent * (push_radius / distance), sphere.x[1] * x_percent * (push_radius / distance)]
+					y_push = [self.x[1] * (1 - x_percent) ** 2, sphere.x[1] * (1 - x_percent) ** 2]
 
+					self.x[0] += -x_change[0] + x_change[1]
 					self.x[1] = self.x[1] - x_change[0] + x_change[1]
+					sphere.x[0] += x_change[0] - x_change[1]
 					sphere.x[1] = sphere.x[1] + x_change[0] - x_change[1]
 				
 				x_push = None
 				if y_diff != 0:
-					y_change = [self.y[1] * (push_radius - abs(x_diff)) / push_radius * (push_radius / distance), sphere.y[1] * (push_radius - abs(x_diff)) / push_radius * (push_radius / distance)]
-					x_push = [self.y[1] * (1 - (push_radius - abs(x_diff)) / push_radius), sphere.y[1] * (1 - (push_radius - abs(x_diff)) / push_radius)]
+					y_percent = (push_radius - abs(x_diff)) / push_radius
+					y_change = [self.y[1] * y_percent * (push_radius / distance), sphere.y[1] * y_percent * (push_radius / distance)]
+					x_push = [self.y[1] * (1 - y_percent) ** 2, sphere.y[1] * (1 - y_percent) ** 2]
 
+					self.y[0] += y_change[0] + y_change[1]
 					self.y[1] = self.y[1] - y_change[0] + y_change[1]
+					sphere.y[0] += y_change[0] - y_change[1]
 					sphere.y[1] = sphere.y[1] + y_change[0] - y_change[1]
 
 				if x_push != None:
