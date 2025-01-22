@@ -72,20 +72,38 @@ class Circle:
 			y_diff = (self.y[0] - sphere.y[0])
 			if (math.sqrt(x_diff**2 + y_diff**2) <= push_radius):
 				collide = True
+
 		if collide == True:
 			if math.sqrt(x_diff**2 + y_diff**2) > 1:
 				distance = math.sqrt(x_diff**2 + y_diff**2)
 			else:
 				distance = 1
+
 			if x_diff != 0 and y_diff != 0:
+
 				x_push = None
-				y_push = None
 				if x_diff != 0:
 					x_change = [self.x[1] * (push_radius - abs(y_diff)) / push_radius * (push_radius / distance), sphere.x[1] * (push_radius - abs(y_diff)) / push_radius * (push_radius / distance)]
 					y_push = [self.x[1] * (1 - (push_radius - abs(y_diff)) / push_radius), sphere.x[1] * (1 - (push_radius - abs(y_diff)) / push_radius)]
 
 					self.x[1] = self.x[1] - x_change[0] + x_change[1]
 					sphere.x[1] = sphere.x[1] + x_change[0] - x_change[1]
+
+				y_push = None
+				if y_diff != 0:
+					y_change = [self.y[1] * (push_radius - abs(x_diff)) / push_radius * (push_radius / distance), sphere.y[1] * (push_radius - abs(x_diff)) / push_radius * (push_radius / distance)]
+					x_push = [self.y[1] * (1 - (push_radius - abs(x_diff)) / push_radius), sphere.y[1] * (1 - (push_radius - abs(x_diff)) / push_radius)]
+
+					self.y[1] = self.y[1] - y_change[0] + y_change[1]
+					sphere.y[1] = sphere.y[1] + y_change[0] - y_change[1]
+
+				if x_push != None:
+					if y_diff < 0 and x_diff > 0 or y_diff > 0 and x_diff < 0:
+						self.x[1] = self.x[1] + x_push[0] - x_push[1]
+						sphere.x[1] = sphere.x[1] - x_push[0] + x_push[1]
+					else:
+						self.x[1] = self.x[1] - x_push[0] + x_push[1]
+						sphere.x[1] = sphere.x[1] + x_push[0] - x_push[1]
 
 				if y_push != None:
 					if x_diff < 0 and y_diff > 0 or x_diff > 0 and y_diff < 0:
@@ -103,17 +121,23 @@ class Circle:
 				self.y[0] += change
 				sphere.y[0] -= change
 
-# Do not put count above 16 untill I fix this shit.
+# Do not put count above 4 untill I fix this shit.
 # The issue lies within the ball collision function.
 def create_ball():
 	mouse_x, mouse_y = pygame.mouse.get_pos()
-	newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
-	for information in range(len(color_dictionary)):
-		if color_dictionary[information] == newcolor:
-			newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
-			information = 0
-	dictionary.append(Circle(newcolor, mouse_x, mouse_y))
-	color_dictionary.append(newcolor)
+	can_create = True
+	for sphere in dictionary:
+		if (math.sqrt((sphere.x[0] - mouse_x)**2 + (sphere.y[0] - mouse_y)**2) <= sphere.radius * 2):
+			can_create = False
+	if can_create == True:
+		mouse_x, mouse_y = pygame.mouse.get_pos()
+		newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
+		for information in range(len(color_dictionary)):
+			if color_dictionary[information] == newcolor:
+				newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
+				information = 0
+		dictionary.append(Circle(newcolor, mouse_x, mouse_y))
+		color_dictionary.append(newcolor)
 
 def delete_ball():
 	mouse_x, mouse_y = pygame.mouse.get_pos()
