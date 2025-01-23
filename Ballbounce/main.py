@@ -34,6 +34,8 @@ def main():
 				if event.key == pygame.K_BACKSPACE:
 					if len(dictionary) > 0:
 						delete_ball()
+				if event.key == pygame.K_l:
+					lock_ball()
 				if event.key == pygame.K_s:
 					stop_ball()
 				if event.key == pygame.K_r:

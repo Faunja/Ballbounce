@@ -15,27 +15,32 @@ class Circle:
 		self.y = [y_place, 0]
 		self.radius = SCREEN_HEIGHT / 16
 		self.friction = 9
+		self.lock = False
 		self.held = False
 		self.sling = False
 	
 	def movement(self, mouse_x, mouse_y):
-		if self.held == True:
-			self.x[1] = mouse_x - self.x[0]
-			self.x[0] = mouse_x
-			self.y[1] = mouse_y - self.y[0]
-			self.y[0] = mouse_y
-		elif self.sling == True:
-			self.x[1] = (mouse_x - self.x[0]) / self.friction
-			self.y[1] = (mouse_y - self.y[0]) / self.friction
+		if self.lock == False:
+			if self.held == True:
+				self.x[1] = mouse_x - self.x[0]
+				self.x[0] = mouse_x
+				self.y[1] = mouse_y - self.y[0]
+				self.y[0] = mouse_y
+			elif self.sling == True:
+				self.x[1] = (mouse_x - self.x[0]) / self.friction
+				self.y[1] = (mouse_y - self.y[0]) / self.friction
+			else:
+				self.x[0] += self.x[1]
+				self.x[1] *= self.friction / 10
+				if -1 < self.x[1] < 1:
+					self.x[1] = 0
+				self.y[0] += self.y[1]
+				self.y[1] *= self.friction / 10
+				if -1 < self.y[1] < 1:
+					self.y[1] = 0
 		else:
-			self.x[0] += self.x[1]
-			self.x[1] *= self.friction / 10
-			if -1 < self.x[1] < 1:
-				self.x[1] = 0
-			self.y[0] += self.y[1]
-			self.y[1] *= self.friction / 10
-			if -1 < self.y[1] < 1:
-				self.y[1] = 0
+			self.x[1] = 0
+			self.y[1] = 0
 	
 	def collision(self):
 		if self.x[0] - self.radius <= 0:
@@ -87,9 +92,7 @@ class Circle:
 					x_change = [self.x[1] * x_percent * (push_radius / distance), sphere.x[1] * x_percent * (push_radius / distance)]
 					y_push = [self.x[1] * (1 - x_percent) ** 2, sphere.x[1] * (1 - x_percent) ** 2]
 
-					self.x[0] += -x_change[0] + x_change[1]
 					self.x[1] = self.x[1] - x_change[0] + x_change[1]
-					sphere.x[0] += x_change[0] - x_change[1]
 					sphere.x[1] = sphere.x[1] + x_change[0] - x_change[1]
 				
 				x_push = None
@@ -98,9 +101,7 @@ class Circle:
 					y_change = [self.y[1] * y_percent * (push_radius / distance), sphere.y[1] * y_percent * (push_radius / distance)]
 					x_push = [self.y[1] * (1 - y_percent) ** 2, sphere.y[1] * (1 - y_percent) ** 2]
 
-					self.y[0] += y_change[0] + y_change[1]
 					self.y[1] = self.y[1] - y_change[0] + y_change[1]
-					sphere.y[0] += y_change[0] - y_change[1]
 					sphere.y[1] = sphere.y[1] + y_change[0] - y_change[1]
 
 				if x_push != None:
