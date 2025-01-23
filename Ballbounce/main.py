@@ -18,6 +18,8 @@ def main():
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				if event.button == 1:
 					grab_ball(True)
+				if event.button == 2:
+					lock_ball()
 				if event.button == 3:
 					sling_ball(True)
 			if event.type == pygame.MOUSEBUTTONUP:
