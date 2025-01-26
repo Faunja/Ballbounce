@@ -73,11 +73,12 @@ class Circle:
 			if (math.sqrt(x_diff**2 + y_diff**2) <= push_radius):
 				collide = True
 
-		if collide == True:         
-			if x_diff != 0 and y_diff != 0:
-				if x_diff != 0:
-					x_percent = (push_radius - abs(x_diff)) / push_radius
-					print(x_percent)
+		if collide == True:
+			selfvelocity = self.velocity
+			self.velocity[0] += ((sphere.velocity[0] - self.velocity[0]) * (sphere.position[0] - self.position[0])) / abs(sphere.position[0] - self.position[0]) ** 2 * (sphere.position[0] - self.position[0])
+			sphere.velocity[0] += ((selfvelocity[0] - sphere.velocity[0]) * (selfvelocity[0] - sphere.position[0])) / abs(selfvelocity[0] - sphere.position[0]) ** 2 * (selfvelocity[0] - sphere.position[0])
+			self.velocity[1] += ((sphere.velocity[1] - self.velocity[1]) * (sphere.position[1] - self.position[1])) / abs(sphere.position[1] - self.position[1]) ** 2 * (sphere.position[1] - self.position[1])
+			sphere.velocity[1] += ((selfvelocity[1] - sphere.velocity[1]) * (selfvelocity[1] - sphere.position[1])) / abs(selfvelocity[1] - sphere.position[1]) ** 2 * (selfvelocity[1] - sphere.position[1])
 
 # Do not put count above 4 untill I fix this shit.
 # The issue lies within the ball collision function.

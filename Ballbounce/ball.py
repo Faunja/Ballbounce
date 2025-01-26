@@ -25,13 +25,13 @@ def sling_ball(click):
 
 def stop_ball():
 	for sphere in dictionary:
-		sphere.x[1] = 0
-		sphere.y[1] = 0
+		sphere.velocity[0] = 0
+		sphere.velocity[1] = 0
 		
 def random_ball():
 	for sphere in dictionary:
-		sphere.x[1] += random.randint(-100, 100)
-		sphere.y[1] += random.randint(-100, 100)
+		sphere.velocity[0] += random.randint(-100, 100)
+		sphere.velocity[1] += random.randint(-100, 100)
 
 def draw_ball():
 	slinged = None
