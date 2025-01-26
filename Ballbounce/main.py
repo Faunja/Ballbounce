@@ -18,8 +18,6 @@ def main():
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				if event.button == 1:
 					grab_ball(True)
-				if event.button == 2:
-					lock_ball()
 				if event.button == 3:
 					sling_ball(True)
 			if event.type == pygame.MOUSEBUTTONUP:
@@ -36,8 +34,6 @@ def main():
 				if event.key == pygame.K_BACKSPACE:
 					if len(dictionary) > 0:
 						delete_ball()
-				if event.key == pygame.K_l:
-					lock_ball()
 				if event.key == pygame.K_s:
 					stop_ball()
 				if event.key == pygame.K_r:
