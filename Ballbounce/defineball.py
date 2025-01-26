@@ -52,35 +52,18 @@ class Circle:
 			self.velocity[1] *= -1
 	
 	def ball_collision(self, sphere):
-		collide = False
+		x_diff = (self.position[0] - sphere.position[0])
+		y_diff = (self.position[1] - sphere.position[1])
+		distance = math.sqrt(x_diff**2 + y_diff**2)
 		push_radius = self.radius + sphere.radius
-		if self.velocity[0] > self.radius * 2 or self.velocity[1] > self.radius * 2:
-			if self.sling == False:
-				x_motion = round(abs(self.velocity[0]) / self.radius)
-				y_motion = round(abs(self.velocity[1]) / self.radius)
-				for x_range in range(x_motion):
-					x_diff = (self.position[0] + self.velocity[0] * (x_range / x_motion) - sphere.position[0])
-					for y_range in range(y_motion):
-						y_diff = (self.position[1] + self.velocity[1] * (y_range / y_motion) - sphere.position[1])
-						if (math.sqrt(x_diff**2 + y_diff**2) <= push_radius):
-							collide = True
-							break
-					if collide == True:
-						break
-		else:
-			x_diff = (self.position[0] - sphere.position[0])
-			y_diff = (self.position[1] - sphere.position[1])
-			if (math.sqrt(x_diff**2 + y_diff**2) <= push_radius):
-				collide = True
+		if (distance <= push_radius):
+			self.velocity[0] += (push_radius - distance) * (x_diff / abs(x_diff))
+			sphere.velocity[0] -= (push_radius - distance) * (x_diff / abs(x_diff))
 
-		if collide == True:
-			selfvelocity = self.velocity
-			self.velocity[0] += ((sphere.velocity[0] - self.velocity[0]) * (sphere.position[0] - self.position[0])) / abs(sphere.position[0] - self.position[0]) ** 2 * (sphere.position[0] - self.position[0])
-			sphere.velocity[0] += ((selfvelocity[0] - sphere.velocity[0]) * (selfvelocity[0] - sphere.position[0])) / abs(selfvelocity[0] - sphere.position[0]) ** 2 * (selfvelocity[0] - sphere.position[0])
-			self.velocity[1] += ((sphere.velocity[1] - self.velocity[1]) * (sphere.position[1] - self.position[1])) / abs(sphere.position[1] - self.position[1]) ** 2 * (sphere.position[1] - self.position[1])
-			sphere.velocity[1] += ((selfvelocity[1] - sphere.velocity[1]) * (selfvelocity[1] - sphere.position[1])) / abs(selfvelocity[1] - sphere.position[1]) ** 2 * (selfvelocity[1] - sphere.position[1])
+			self.velocity[1] += (push_radius - distance) * (y_diff / abs(y_diff))
+			sphere.velocity[1] -= (push_radius - distance) * (y_diff / abs(y_diff))
 
-# Do not put count above 4 untill I fix this shit.
+# Do not put count above 4 untill I fix this.
 # The issue lies within the ball collision function.
 def create_ball():
 	mouse_x, mouse_y = pygame.mouse.get_pos()
