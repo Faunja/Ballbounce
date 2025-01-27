@@ -2,7 +2,7 @@
 # By Kayden Campbell
 # Copyright 2025
 # Licensed under the terms of the GPL 3
-import math, random
+import math, random, numpy
 from variables import *
 
 dictionary = []
@@ -11,8 +11,8 @@ color_dictionary = []
 class Circle:
 	def __init__(self, color, x_place, y_place):
 		self.color = color
-		self.position = [x_place, y_place]
-		self.velocity = [0, 0]
+		self.position = numpy.array([x_place, y_place])
+		self.velocity = numpy.array([0, 0])
 		self.radius = SCREEN_HEIGHT / 16
 		self.friction = 9
 		self.held = False
@@ -57,11 +57,17 @@ class Circle:
 		distance = math.sqrt(x_diff**2 + y_diff**2)
 		push_radius = self.radius + sphere.radius
 		if (distance <= push_radius):
-			self.velocity[0] += (push_radius - distance) * (x_diff / abs(x_diff))
-			sphere.velocity[0] -= (push_radius - distance) * (x_diff / abs(x_diff))
+			mass = [sphere.radius * 2 / (sphere.radius + self.radius), self.radius * 2 / (self.radius + sphere.radius)]
 
-			self.velocity[1] += (push_radius - distance) * (y_diff / abs(y_diff))
-			sphere.velocity[1] -= (push_radius - distance) * (y_diff / abs(y_diff))
+			selfposition = self.position - sphere.position
+			sphereposition = sphere.position - self.position
+			selfnumerator = numpy.inner(self.velocity - sphere.velocity, selfposition)
+			spherenumerator = numpy.inner(sphere.velocity - self.velocity, sphereposition)
+			selfdenominator = numpy.linalg.norm(selfposition) ** 2
+			spheredenominator = numpy.linalg.norm(sphereposition) ** 2
+
+			self.velocity = self.velocity - mass[0] * selfnumerator / selfdenominator * selfposition
+			sphere.velocity = sphere.velocity - mass[1] * (spherenumerator / spheredenominator) * sphereposition
 
 # Do not put count above 4 untill I fix this.
 # The issue lies within the ball collision function.
