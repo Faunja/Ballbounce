@@ -13,7 +13,7 @@ class Circle:
 		self.color = color
 		self.position = numpy.array([x_place, y_place])
 		self.velocity = numpy.array([0, 0])
-		self.radius = SCREEN_HEIGHT / 16
+		self.radius = SCREEN_HEIGHT / 24
 		self.friction = 9
 		self.held = False
 		self.sling = False
@@ -59,11 +59,11 @@ class Circle:
 		if (distance <= push_radius):
 			offset = sphere.position - self.position
 			if self.held == True:
-				sphere.position = sphere.position + offset / distance
+				sphere.position = sphere.position + offset
 			else:
-				self.position = self.position - offset / distance
-				sphere.position = sphere.position + offset / distance
-				
+				self.position = self.position - offset
+				sphere.position = sphere.position + offset
+
 			mass = [sphere.radius * 2 / (sphere.radius + self.radius), self.radius * 2 / (self.radius + sphere.radius)]
 			selfposition = self.position - sphere.position
 			sphereposition = sphere.position - self.position
