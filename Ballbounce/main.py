@@ -11,7 +11,8 @@ from variables import *
 
 def main():
 	run = True
-	
+	creating = False
+	deleting = False
 	while run:
 		clock.tick(FPS)
 		for event in pygame.event.get():
@@ -29,18 +30,27 @@ def main():
 				if event.key == pygame.K_ESCAPE:
 					run = False
 				if event.key == pygame.K_RETURN:
-					if len(dictionary) < 50:
-						create_ball()
+					creating = True
 				if event.key == pygame.K_BACKSPACE:
-					if len(dictionary) > 0:
-						delete_ball()
+					deleting = True
 				if event.key == pygame.K_s:
 					stop_ball()
 				if event.key == pygame.K_r:
 					random_ball()
+			if event.type == pygame.KEYUP:
+				if event.key == pygame.K_RETURN:
+					creating = False
+				if event.key == pygame.K_BACKSPACE:
+					deleting = False
 			if event.type == pygame.QUIT:
 				run = False
-		draw_ball_background()
+		if creating == True:
+			if len(dictionary) < 50:
+				create_ball()
+		if deleting == True:
+			if len(dictionary) > 0:
+				delete_ball()
+		screen.fill(Black)
 		draw_ball()
 		delta_time = clock.tick(FPS)
 		pygame.display.set_caption(f'{clock.get_fps() :.1f}')
