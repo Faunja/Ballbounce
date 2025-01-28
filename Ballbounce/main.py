@@ -29,7 +29,7 @@ def main():
 				if event.key == pygame.K_ESCAPE:
 					run = False
 				if event.key == pygame.K_RETURN:
-					if len(dictionary) < 20:
+					if len(dictionary) < 50:
 						create_ball()
 				if event.key == pygame.K_BACKSPACE:
 					if len(dictionary) > 0:

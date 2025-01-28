@@ -57,8 +57,14 @@ class Circle:
 		distance = math.sqrt(x_diff**2 + y_diff**2)
 		push_radius = self.radius + sphere.radius
 		if (distance <= push_radius):
+			offset = sphere.position - self.position
+			if self.held == True:
+				sphere.position = sphere.position + offset / distance
+			else:
+				self.position = self.position - offset / distance
+				sphere.position = sphere.position + offset / distance
+				
 			mass = [sphere.radius * 2 / (sphere.radius + self.radius), self.radius * 2 / (self.radius + sphere.radius)]
-
 			selfposition = self.position - sphere.position
 			sphereposition = sphere.position - self.position
 			selfnumerator = numpy.inner(self.velocity - sphere.velocity, selfposition)
@@ -69,8 +75,6 @@ class Circle:
 			self.velocity = self.velocity - mass[0] * selfnumerator / selfdenominator * selfposition
 			sphere.velocity = sphere.velocity - mass[1] * (spherenumerator / spheredenominator) * sphereposition
 
-# Do not put count above 4 untill I fix this.
-# The issue lies within the ball collision function.
 def create_ball():
 	mouse_x, mouse_y = pygame.mouse.get_pos()
 	can_create = True
