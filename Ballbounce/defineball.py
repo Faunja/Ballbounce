@@ -52,17 +52,18 @@ class Circle:
 			self.velocity[1] *= -1
 	
 	def ball_collision(self, sphere):
-		x_diff = (self.position[0] - sphere.position[0])
-		y_diff = (self.position[1] - sphere.position[1])
-		distance = math.sqrt(x_diff**2 + y_diff**2)
+		difference = self.position - sphere.position
+		distance = math.sqrt(difference[0]**2 + difference[1]**2)
 		push_radius = self.radius + sphere.radius
 		if (distance <= push_radius):
-			offset = sphere.position - self.position
+			offset = 1 - distance / push_radius
 			if self.held == True:
-				sphere.position = sphere.position + offset
+				sphere.position = sphere.position - difference * offset
+			elif sphere.held == True:
+				self.position = self.position + difference * offset
 			else:
-				self.position = self.position - offset
-				sphere.position = sphere.position + offset
+				self.position = self.position + difference * offset
+				sphere.position = sphere.position - difference * offset
 
 			mass = [sphere.radius * 2 / (sphere.radius + self.radius), self.radius * 2 / (self.radius + sphere.radius)]
 			selfposition = self.position - sphere.position
