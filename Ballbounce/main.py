@@ -13,19 +13,28 @@ def main():
 	run = True
 	creating = False
 	deleting = False
+	shift = False
 	while run:
 		clock.tick(FPS)
 		for event in pygame.event.get():
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				if event.button == 1:
-					grab_ball(True)
+					if shift == False:
+						grab_ball(True)
+					else:
+						pull_ball(True)
 				if event.button == 3:
-					sling_ball(True)
+					if shift == False:
+						sling_ball(True)
+					else:
+						push_ball(True)
 			if event.type == pygame.MOUSEBUTTONUP:
 				if event.button == 1:
 					grab_ball(False)
+					pull_ball(False)
 				if event.button == 3:
 					sling_ball(False)
+					push_ball(False)
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
 					run = False
@@ -33,6 +42,8 @@ def main():
 					creating = True
 				if event.key == pygame.K_BACKSPACE:
 					deleting = True
+				if event.key == pygame.K_LSHIFT:
+					shift = True
 				if event.key == pygame.K_s:
 					stop_ball()
 				if event.key == pygame.K_r:
@@ -42,11 +53,12 @@ def main():
 					creating = False
 				if event.key == pygame.K_BACKSPACE:
 					deleting = False
+				if event.key == pygame.K_LSHIFT:
+					shift = False
 			if event.type == pygame.QUIT:
 				run = False
 		if creating == True:
-			if len(dictionary) < 50:
-				create_ball()
+			create_ball()
 		if deleting == True:
 			if len(dictionary) > 0:
 				delete_ball()

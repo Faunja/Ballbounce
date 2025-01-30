@@ -23,6 +23,14 @@ def sling_ball(click):
 		if click == False and sphere.sling == True:
 			sphere.sling = False
 
+def pull_ball(click):
+	for sphere in dictionary:
+		sphere.pull = click
+
+def push_ball(click):
+	for sphere in dictionary:
+		sphere.push = click
+
 def stop_ball():
 	for sphere in dictionary:
 		sphere.velocity[0] = 0
