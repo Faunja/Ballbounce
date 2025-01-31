@@ -49,16 +49,33 @@ class Circle:
 				self.gravity[1] = self.position[1] - difference[1]
 			if self.pull == False and self.push == False:
 				self.gravity = [None, SCREEN_HEIGHT]
-			if self.gravity[0] != None:
+			if self.gravity[0] != None and self.gravity[1] == None:
 				if self.position[0] < self.gravity[0]:
 					self.velocity[0] += 5
 				elif self.position[0] > self.gravity[0]:
 					self.velocity[0] -= 5
-			if self.gravity[1] != None:
+			elif self.gravity[1] != None and self.gravity[0] == None:
 				if self.position[1] < self.gravity[1]:
 					self.velocity[1] += 5
 				elif self.position[1] > self.gravity[1]:
 					self.velocity[1] -= 5
+			elif self.gravity[0] != None and self.gravity[1] != None:
+				difference = [self.gravity[0] - self.position[0], self.gravity[1] - self.position[1]]
+				x_push = 5 * abs(difference[0] / difference[1])
+				y_push = 5 * abs(difference[1] / difference[0])
+				if x_push > 5:
+					x_push = 5
+				if y_push > 5:
+					y_push = 5
+				if self.position[0] < self.gravity[0]:
+					self.velocity[0] += x_push
+				elif self.position[0] > self.gravity[0]:
+					self.velocity[0] -= x_push
+				if self.position[1] < self.gravity[1]:
+					self.velocity[1] += y_push
+				elif self.position[1] > self.gravity[1]:
+					self.velocity[1] -= y_push
+				
 			self.position[0] += self.velocity[0]
 			self.velocity[0] *= self.friction
 			self.position[1] += self.velocity[1]
