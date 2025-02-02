@@ -41,6 +41,10 @@ def random_ball():
 		sphere.velocity[0] += random.randint(-100, 100)
 		sphere.velocity[1] += random.randint(-100, 100)
 
+def change_direction(change):
+	for sphere in dictionary:
+		sphere.direction = change
+
 def draw_ball():
 	slinged = None
 	for sphere in dictionary:

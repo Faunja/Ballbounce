@@ -48,6 +48,14 @@ def main():
 					stop_ball()
 				if event.key == pygame.K_r:
 					random_ball()
+				if event.key == pygame.K_UP or event.key == pygame.K_w:
+					change_direction(1)
+				if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+					change_direction(2)
+				if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+					change_direction(3)
+				if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+					change_direction(4)
 			if event.type == pygame.KEYUP:
 				if event.key == pygame.K_RETURN:
 					creating = False

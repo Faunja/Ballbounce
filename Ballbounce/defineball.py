@@ -16,6 +16,7 @@ class Circle:
 		self.radius = SCREEN_HEIGHT / 24
 		self.friction = .9
 		self.gravity = [None, SCREEN_HEIGHT]
+		self.direction = 3
 		self.held = False
 		self.sling = False
 		self.pull = False
@@ -48,7 +49,14 @@ class Circle:
 				self.gravity[0] = self.position[0] - difference[0]
 				self.gravity[1] = self.position[1] - difference[1]
 			if self.pull == False and self.push == False:
-				self.gravity = [None, SCREEN_HEIGHT]
+				if self.direction == 1:
+					self.gravity = [None, 0]
+				elif self.direction == 2:
+					self.gravity = [SCREEN_WIDTH, None]
+				elif self.direction == 3:
+					self.gravity = [None, SCREEN_HEIGHT]
+				else:
+					self.gravity = [0, None]
 			if self.gravity[0] != None and self.gravity[1] == None:
 				if self.position[0] < self.gravity[0]:
 					self.velocity[0] += 5
