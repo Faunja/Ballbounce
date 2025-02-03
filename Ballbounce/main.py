@@ -46,7 +46,10 @@ def main():
 				if event.key == pygame.K_s:
 					stop_ball()
 				if event.key == pygame.K_r:
-					random_ball()
+					if shift == True:
+						dictionary.clear()
+					else:
+						random_ball()
 				if event.key == pygame.K_SPACE:
 					direction_change(0)
 				if event.key == pygame.K_w:
