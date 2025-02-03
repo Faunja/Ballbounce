@@ -5,7 +5,6 @@
 # If pygame is not installed: sudo apt install python3-pygame
 # To run: python3 Idlegame/main.py
 import pygame
-from background import draw_ball_background
 from ball import *
 from variables import *
 
@@ -48,14 +47,16 @@ def main():
 					stop_ball()
 				if event.key == pygame.K_r:
 					random_ball()
-				if event.key == pygame.K_UP or event.key == pygame.K_w:
-					change_direction(1)
-				if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-					change_direction(2)
-				if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-					change_direction(3)
-				if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-					change_direction(4)
+				if event.key == pygame.K_SPACE:
+					direction_change(0)
+				if event.key == pygame.K_w:
+					direction_change(1)
+				if event.key == pygame.K_d:
+					direction_change(2)
+				if event.key == pygame.K_s:
+					direction_change(3)
+				if event.key == pygame.K_a:
+					direction_change(4)
 			if event.type == pygame.KEYUP:
 				if event.key == pygame.K_RETURN:
 					creating = False
@@ -66,7 +67,8 @@ def main():
 			if event.type == pygame.QUIT:
 				run = False
 		if creating == True:
-			create_ball()
+			if len(dictionary) < 21:
+				create_ball()
 		if deleting == True:
 			if len(dictionary) > 0:
 				delete_ball()

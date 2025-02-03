@@ -41,7 +41,7 @@ def random_ball():
 		sphere.velocity[0] += random.randint(-100, 100)
 		sphere.velocity[1] += random.randint(-100, 100)
 
-def change_direction(change):
+def direction_change(change):
 	for sphere in dictionary:
 		sphere.direction = change
 

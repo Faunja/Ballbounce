@@ -15,8 +15,8 @@ class Circle:
 		self.velocity = numpy.array([0.0, 0.0])
 		self.radius = SCREEN_HEIGHT / 24
 		self.friction = .9
-		self.gravity = [None, SCREEN_HEIGHT]
 		self.direction = 3
+		self.gravity = [None, SCREEN_HEIGHT]
 		self.held = False
 		self.sling = False
 		self.pull = False
@@ -31,6 +31,26 @@ class Circle:
 		else:
 			return False
 	
+	def gravity_check(self):
+		if self.pull == True:
+			self.gravity[0], self.gravity[1] = pygame.mouse.get_pos()
+		if self.push == True:
+			mouse_x, mouse_y = pygame.mouse.get_pos()
+			difference = [mouse_x - self.position[0], mouse_y - self.position[1]]
+			self.gravity[0] = self.position[0] - difference[0]
+			self.gravity[1] = self.position[1] - difference[1]
+		if self.pull == False and self.push == False:
+			if self.direction == 1:
+				self.gravity = [None, 0]
+			elif self.direction == 2:
+				self.gravity = [SCREEN_WIDTH, None]
+			elif self.direction == 3:
+				self.gravity = [None, SCREEN_HEIGHT]
+			elif self.direction == 4:
+				self.gravity = [0, None]
+			else:
+				self.gravity = [None, None]
+	
 	def movement(self, mouse_x, mouse_y):
 		if self.held == True:
 			self.velocity[0] = mouse_x - self.position[0]
@@ -41,22 +61,7 @@ class Circle:
 			self.velocity[0] = (mouse_x - self.position[0]) / self.friction
 			self.velocity[1] = (mouse_y - self.position[1]) / self.friction
 		else:
-			if self.pull == True:
-				self.gravity[0], self.gravity[1] = pygame.mouse.get_pos()
-			if self.push == True:
-				mouse_x, mouse_y = pygame.mouse.get_pos()
-				difference = [mouse_x - self.position[0], mouse_y - self.position[1]]
-				self.gravity[0] = self.position[0] - difference[0]
-				self.gravity[1] = self.position[1] - difference[1]
-			if self.pull == False and self.push == False:
-				if self.direction == 1:
-					self.gravity = [None, 0]
-				elif self.direction == 2:
-					self.gravity = [SCREEN_WIDTH, None]
-				elif self.direction == 3:
-					self.gravity = [None, SCREEN_HEIGHT]
-				else:
-					self.gravity = [0, None]
+			self.gravity_check()
 			if self.gravity[0] != None and self.gravity[1] == None:
 				if self.position[0] < self.gravity[0]:
 					self.velocity[0] += 5
