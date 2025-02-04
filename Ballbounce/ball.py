@@ -31,16 +31,6 @@ def push_ball(click):
 	for sphere in dictionary:
 		sphere.push = click
 
-def stop_ball():
-	for sphere in dictionary:
-		sphere.velocity[0] = 0
-		sphere.velocity[1] = 0
-		
-def random_ball():
-	for sphere in dictionary:
-		sphere.velocity[0] += random.randint(-100, 100)
-		sphere.velocity[1] += random.randint(-100, 100)
-
 def direction_change(change):
 	for sphere in dictionary:
 		sphere.direction = change
