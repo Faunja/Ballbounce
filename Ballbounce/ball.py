@@ -32,8 +32,15 @@ def push_ball(click):
 		sphere.push = click
 
 def direction_change(change):
-	for sphere in dictionary:
-		sphere.direction = change
+	if change != 0:
+		for sphere in dictionary:
+			sphere.direction = change
+	else:
+		for sphere in dictionary:
+			if sphere.space == False:
+				sphere.space = True
+			else:
+				sphere.space = False
 
 def draw_ball():
 	slinged = None

@@ -56,6 +56,7 @@ def main():
 						shift = False
 				if event.key == pygame.K_r:
 					dictionary.clear()
+					space = False
 				if event.key == pygame.K_SPACE:
 					direction_change(0)
 					if space == False:

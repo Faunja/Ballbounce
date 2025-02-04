@@ -20,6 +20,7 @@ class Circle:
 		else:
 			self.direction = dictionary[0].direction
 		self.gravity = [None, None]
+		self.space = False
 		self.held = False
 		self.sling = False
 		self.pull = False
@@ -43,14 +44,15 @@ class Circle:
 			self.gravity[0] = self.position[0] - difference[0]
 			self.gravity[1] = self.position[1] - difference[1]
 		if self.pull == False and self.push == False:
-			if self.direction == 1:
-				self.gravity = [None, 0]
-			elif self.direction == 2:
-				self.gravity = [SCREEN_WIDTH, None]
-			elif self.direction == 3:
-				self.gravity = [None, SCREEN_HEIGHT]
-			elif self.direction == 4:
-				self.gravity = [0, None]
+			if self.space == False:
+				if self.direction == 1:
+					self.gravity = [None, 0]
+				elif self.direction == 2:
+					self.gravity = [SCREEN_WIDTH, None]
+				elif self.direction == 3:
+					self.gravity = [None, SCREEN_HEIGHT]
+				else:
+					self.gravity = [0, None]
 			else:
 				self.gravity = [None, None]
 	
