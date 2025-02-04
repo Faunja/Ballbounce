@@ -17,10 +17,11 @@ class Circle:
 		self.friction = .9
 		if len(dictionary) == 0:
 			self.direction = 3
+			self.space = False
 		else:
 			self.direction = dictionary[0].direction
+			self.space = dictionary[0].space
 		self.gravity = [None, None]
-		self.space = False
 		self.held = False
 		self.sling = False
 		self.pull = False

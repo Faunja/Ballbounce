@@ -84,6 +84,9 @@ def main():
 		if deleting == True:
 			if len(dictionary) > 0:
 				delete_ball()
+			else:
+				if space == True:
+					space = False
 		screen.fill(Black)
 		draw_text_background(tabbed, shift, space)
 		draw_ball()
