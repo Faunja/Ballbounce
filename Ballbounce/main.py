@@ -80,7 +80,8 @@ def main():
 			if event.type == pygame.QUIT:
 				run = False
 		if creating == True:
-			create_ball()
+			if float(f'{clock.get_fps() :.1f}') > 45:
+				create_ball()
 		if deleting == True:
 			if len(dictionary) > 0:
 				delete_ball()
