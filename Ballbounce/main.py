@@ -84,7 +84,7 @@ def main():
 			if len(dictionary) > 0:
 				delete_ball()
 		screen.fill(Black)
-		draw_text_background(tabbed, shift)
+		draw_text_background(tabbed, shift, space)
 		draw_ball()
 		pygame.display.set_caption(f'{clock.get_fps() :.1f}')
 		pygame.display.update()

@@ -84,9 +84,9 @@ class Circle:
 
 	def movement(self, mouse_x, mouse_y):
 		if numpy.isnan(self.position[0]) == True or numpy.isnan(self.position[1]) == True:
-			self.position = numpy.array([random.randrange(self.radius, SCREEN_WIDTH), random.randrange(self.radius, SCREEN_HEIGHT)])
+			self.position = numpy.array([random.randrange(round(self.radius), SCREEN_WIDTH), random.randrange(round(self.radius), SCREEN_HEIGHT)])
 			while self.check_ball_collision == True:
-				self.position = numpy.array([random.randrange(self.radius, SCREEN_WIDTH), random.randrange(self.radius, SCREEN_HEIGHT)])
+				self.position = numpy.array([random.randrange(round(self.radius), SCREEN_WIDTH), random.randrange(round(self.radius), SCREEN_HEIGHT)])
 			self.velocity = numpy.array([0.0, 0.0])
 		else:
 			if self.held == True:

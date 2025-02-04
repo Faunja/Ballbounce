@@ -7,8 +7,8 @@ import pygame
 pygame.init()
 DISPLAYSURF = pygame.display.get_desktop_sizes()
 SCREEN_WIDTH, SCREEN_HEIGHT = DISPLAYSURF[0]
-SCREEN_WIDTH *= 3/4
-SCREEN_HEIGHT *= 3/4
+SCREEN_WIDTH = round(SCREEN_WIDTH * 3/4)
+SCREEN_HEIGHT = round(SCREEN_HEIGHT * 3/4)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 White = (255, 255, 255)
