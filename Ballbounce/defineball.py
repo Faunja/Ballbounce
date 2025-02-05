@@ -27,6 +27,17 @@ class Circle:
 		self.pull = False
 		self.push = False
 	
+	def check_wall_collision(self):
+		if self.position[0] - self.radius <= 0:
+			return True
+		elif self.position[0] + self.radius >= SCREEN_WIDTH:
+			return True
+		if self.position[1] - self.radius <= 0:
+			return True
+		elif self.position[1] + self.radius >= SCREEN_HEIGHT:
+			return True
+		return False
+
 	def check_ball_collision(self, sphere):
 		difference = self.position - sphere.position
 		distance = math.sqrt(difference[0]**2 + difference[1]**2)
@@ -98,8 +109,8 @@ class Circle:
 				self.velocity[1] = mouse_y - self.position[1]
 				self.position[1] = mouse_y
 			elif self.sling == True:
-				self.velocity[0] = (mouse_x - self.position[0]) / self.friction
-				self.velocity[1] = (mouse_y - self.position[1]) / self.friction
+				self.velocity[0] = (mouse_x - self.position[0]) / 5
+				self.velocity[1] = (mouse_y - self.position[1]) / 5
 			else:
 				self.gravity_check()
 				self.gravity_movement()
@@ -129,9 +140,9 @@ class Circle:
 		distance = math.sqrt(difference[0]**2 + difference[1]**2)
 		push_radius = self.radius + sphere.radius
 		offset = 1 - distance / push_radius
-		if self.held == True or self.sling == True:
+		if self.held == True or self.sling == True or self.check_wall_collision() == True:
 			sphere.position = sphere.position - difference * offset
-		elif sphere.held == True or sphere.sling == True:
+		elif sphere.held == True or sphere.sling == True or sphere.check_wall_collision() == True:
 			self.position = self.position + difference * offset
 		else:
 			self.position = self.position + difference * offset
@@ -145,7 +156,7 @@ class Circle:
 			spherenumerator = numpy.inner(sphere.velocity - self.velocity, sphereposition)
 			selfdenominator = numpy.linalg.norm(selfposition) ** 2
 			spheredenominator = numpy.linalg.norm(sphereposition) ** 2
-
+			
 			self.velocity = self.velocity - mass[0] * selfnumerator / selfdenominator * selfposition
 			sphere.velocity = sphere.velocity - mass[1] * (spherenumerator / spheredenominator) * sphereposition
 
