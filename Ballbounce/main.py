@@ -13,6 +13,7 @@ def main():
 	run = True
 	creating = False
 	deleting = False
+	culling = False
 	shift = False
 	space = False
 	tabbed = False
@@ -79,9 +80,17 @@ def main():
 					deleting = False
 			if event.type == pygame.QUIT:
 				run = False
-		if creating == True:
-			if float(f'{clock.get_fps() :.1f}') > 45:
-				create_ball()
+		if culling == False:
+			if creating == True:
+				if float(f'{clock.get_fps() :.1f}') > 45:
+					create_ball()
+			if float(f'{clock.get_fps() :.1f}') <= 30 and len(dictionary) != 0:
+				culling = True
+		else:
+			if float(f'{clock.get_fps() :.1f}') < 50 and len(dictionary) != 0:
+				delete_ball(True)
+			else:
+				culling == False
 		if deleting == True:
 			if len(dictionary) > 0:
 				delete_ball()

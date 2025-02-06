@@ -6,14 +6,13 @@ import math, random, numpy
 from variables import *
 
 dictionary = []
-color_dictionary = []
 
 class Circle:
 	def __init__(self, color, x_place, y_place):
 		self.color = color
 		self.position = numpy.array([x_place, y_place])
 		self.velocity = numpy.array([0.0, 0.0])
-		self.radius = SCREEN_HEIGHT / 24
+		self.radius = round(SCREEN_HEIGHT / 24)
 		self.friction = .9
 		if len(dictionary) == 0:
 			self.direction = 3
@@ -38,15 +37,24 @@ class Circle:
 			return True
 		return False
 
-	def check_ball_collision(self, sphere):
-		difference = self.position - sphere.position
-		distance = math.sqrt(difference[0]**2 + difference[1]**2)
-		push_radius = self.radius + sphere.radius
-		if (distance <= push_radius):
-			return True
+	def check_ball_collision(self, sphere = None):
+		if sphere != None:
+			difference = self.position - sphere.position
+			distance = math.sqrt(difference[0]**2 + difference[1]**2)
+			push_radius = self.radius + sphere.radius
+			if (distance <= push_radius):
+				return True
+			else:
+				return False
 		else:
+			for sphere in dictionary:
+				difference = self.position - sphere.position
+				distance = math.sqrt(difference[0]**2 + difference[1]**2)
+				push_radius = self.radius + sphere.radius
+				if (distance <= push_radius):
+					return True
 			return False
-	
+
 	def gravity_check(self):
 		if self.pull == True:
 			self.gravity[0], self.gravity[1] = pygame.mouse.get_pos()
@@ -97,27 +105,21 @@ class Circle:
 				self.velocity[1] -= y_push
 
 	def movement(self, mouse_x, mouse_y):
-		if numpy.isnan(self.position[0]) == True or numpy.isnan(self.position[1]) == True:
-			self.position = numpy.array([random.randrange(round(self.radius), SCREEN_WIDTH), random.randrange(round(self.radius), SCREEN_HEIGHT)])
-			while self.check_ball_collision == True:
-				self.position = numpy.array([random.randrange(round(self.radius), SCREEN_WIDTH), random.randrange(round(self.radius), SCREEN_HEIGHT)])
-			self.velocity = numpy.array([0.0, 0.0])
+		if self.held == True:
+			self.velocity[0] = mouse_x - self.position[0]
+			self.position[0] = mouse_x
+			self.velocity[1] = mouse_y - self.position[1]
+			self.position[1] = mouse_y
+		elif self.sling == True:
+			self.velocity[0] = (mouse_x - self.position[0]) / 5
+			self.velocity[1] = (mouse_y - self.position[1]) / 5
 		else:
-			if self.held == True:
-				self.velocity[0] = mouse_x - self.position[0]
-				self.position[0] = mouse_x
-				self.velocity[1] = mouse_y - self.position[1]
-				self.position[1] = mouse_y
-			elif self.sling == True:
-				self.velocity[0] = (mouse_x - self.position[0]) / 5
-				self.velocity[1] = (mouse_y - self.position[1]) / 5
-			else:
-				self.gravity_check()
-				self.gravity_movement()
-				self.position[0] += self.velocity[0]
-				self.velocity[0] *= self.friction
-				self.position[1] += self.velocity[1]
-				self.velocity[1] *= self.friction
+			self.gravity_check()
+			self.gravity_movement()
+			self.position[0] += self.velocity[0]
+			self.velocity[0] *= self.friction
+			self.position[1] += self.velocity[1]
+			self.velocity[1] *= self.friction
 	
 	def collision(self):
 		if self.position[0] - self.radius <= 0:
@@ -157,43 +159,14 @@ class Circle:
 			selfdenominator = numpy.linalg.norm(selfposition) ** 2
 			spheredenominator = numpy.linalg.norm(sphereposition) ** 2
 			
-			self.velocity = self.velocity - mass[0] * selfnumerator / selfdenominator * selfposition
-			sphere.velocity = sphere.velocity - mass[1] * (spherenumerator / spheredenominator) * sphereposition
-
-def create_ball():
-	mouse_x, mouse_y = pygame.mouse.get_pos()
-	can_create = True
-	for sphere in dictionary:
-		if (math.sqrt((sphere.position[0] - mouse_x)**2 + (sphere.position[1] - mouse_y)**2) <= sphere.radius * 2):
-			can_create = False
-	if can_create == True:
-		mouse_x, mouse_y = pygame.mouse.get_pos()
-		newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
-		for information in range(len(color_dictionary)):
-			if color_dictionary[information] == newcolor:
-				newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
-				information = 0
-		dictionary.append(Circle(newcolor, mouse_x, mouse_y))
-		color_dictionary.append(newcolor)
-
-def delete_ball():
-	mouse_x, mouse_y = pygame.mouse.get_pos()
-	for sphere in dictionary:
-		if (math.sqrt((sphere.position[0] - mouse_x)**2 + (sphere.position[1] - mouse_y)**2) <= sphere.radius):
-			color_dictionary.remove(sphere.color)
-			dictionary.remove(sphere)
-			break
-		
-def update_ball(sphere):
-	mouse_x, mouse_y = pygame.mouse.get_pos()
-	can_collide = False
-	for cylinder in dictionary:
-		if can_collide == True:
-			sphere.ball_collision(cylinder)
-		if cylinder.color == sphere.color:
-			can_collide = True
-	sphere.movement(mouse_x, mouse_y)
-	sphere.collision()
+			if selfdenominator != 0 and spheredenominator != 0:
+				self.velocity = self.velocity - mass[0] * (selfnumerator / selfdenominator) * selfposition
+				sphere.velocity = sphere.velocity - mass[1] * (spherenumerator / spheredenominator) * sphereposition
+			else:
+				self.position = numpy.array([random.randrange(round(self.radius), SCREEN_WIDTH), random.randrange(round(self.radius), SCREEN_HEIGHT)])
+				while self.check_ball_collision == True:
+					self.position = numpy.array([random.randrange(round(self.radius), SCREEN_WIDTH), random.randrange(round(self.radius), SCREEN_HEIGHT)])
+				self.velocity = numpy.array([0.0, 0.0])
 
 
 
