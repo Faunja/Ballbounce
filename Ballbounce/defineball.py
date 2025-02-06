@@ -5,7 +5,15 @@
 import math, random, numpy
 from variables import *
 
-dictionary = []
+class Global_Circle:
+	def __init__(self):
+		self.dictionary = []
+		self.pull = False
+		self.push = False
+		self.space = False
+		self.direction = 3
+
+Dictionary = Global_Circle()
 
 class Circle:
 	def __init__(self, color, x_place, y_place):
@@ -14,18 +22,10 @@ class Circle:
 		self.velocity = numpy.array([0.0, 0.0])
 		self.radius = round(SCREEN_HEIGHT / 24)
 		self.friction = .9
-		if len(dictionary) == 0:
-			self.direction = 3
-			self.space = False
-		else:
-			self.direction = dictionary[0].direction
-			self.space = dictionary[0].space
 		self.gravity = [None, None]
 		self.held = False
 		self.sling = False
-		self.pull = False
-		self.push = False
-	
+
 	def check_wall_collision(self):
 		if self.position[0] - self.radius <= 0:
 			return True
@@ -47,7 +47,7 @@ class Circle:
 			else:
 				return False
 		else:
-			for sphere in dictionary:
+			for sphere in Dictionary.dictionary:
 				difference = self.position - sphere.position
 				distance = math.sqrt(difference[0]**2 + difference[1]**2)
 				push_radius = self.radius + sphere.radius
@@ -56,20 +56,20 @@ class Circle:
 			return False
 
 	def gravity_check(self):
-		if self.pull == True:
+		if Dictionary.pull == True:
 			self.gravity[0], self.gravity[1] = pygame.mouse.get_pos()
-		if self.push == True:
+		if Dictionary.push == True:
 			mouse_x, mouse_y = pygame.mouse.get_pos()
 			difference = [mouse_x - self.position[0], mouse_y - self.position[1]]
 			self.gravity[0] = self.position[0] - difference[0]
 			self.gravity[1] = self.position[1] - difference[1]
-		if self.pull == False and self.push == False:
-			if self.space == False:
-				if self.direction == 1:
+		if Dictionary.pull == False and Dictionary.push == False:
+			if Dictionary.space == False:
+				if Dictionary.direction == 1:
 					self.gravity = [None, 0]
-				elif self.direction == 2:
+				elif Dictionary.direction == 2:
 					self.gravity = [SCREEN_WIDTH, None]
-				elif self.direction == 3:
+				elif Dictionary.direction == 3:
 					self.gravity = [None, SCREEN_HEIGHT]
 				else:
 					self.gravity = [0, None]

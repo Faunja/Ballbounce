@@ -15,7 +15,6 @@ def main():
 	deleting = False
 	culling = False
 	shift = False
-	space = False
 	tabbed = False
 	while run:
 		clock.tick(FPS)
@@ -25,19 +24,19 @@ def main():
 					if shift == False:
 						grab_ball(True)
 					else:
-						pull_ball(True)
+						Dictionary.pull = True
 				if event.button == 3:
 					if shift == False:
 						sling_ball(True)
 					else:
-						push_ball(True)
+						Dictionary.push = True
 			if event.type == pygame.MOUSEBUTTONUP:
 				if event.button == 1:
 					grab_ball(False)
-					pull_ball(False)
+					Dictionary.pull = False
 				if event.button == 3:
 					sling_ball(False)
-					push_ball(False)
+					Dictionary.push = False
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
 					run = False
@@ -56,23 +55,22 @@ def main():
 					else:
 						shift = False
 				if event.key == pygame.K_r:
-					dictionary.clear()
+					Dictionary.dictionary.clear()
 					space = False
 				if event.key == pygame.K_SPACE:
-					direction_change(0)
-					if space == False:
-						space = True
+					if Dictionary.space == False:
+						Dictionary.space = True
 					else:
-						space = False
-				if space == False:
+						Dictionary.space = False
+				if Dictionary.space == False:
 					if event.key == pygame.K_w or event.key == pygame.K_UP:
-						direction_change(1)
+						Dictionary.direction = 1
 					if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
-						direction_change(2)
+						Dictionary.direction = 2
 					if event.key == pygame.K_s or event.key == pygame.K_DOWN:
-						direction_change(3)
+						Dictionary.direction = 3
 					if event.key == pygame.K_a or event.key == pygame.K_LEFT:
-						direction_change(4)
+						Dictionary.direction = 4
 			if event.type == pygame.KEYUP:
 				if event.key == pygame.K_RETURN:
 					creating = False
@@ -84,21 +82,21 @@ def main():
 			if creating == True:
 				if float(f'{clock.get_fps() :.1f}') > 45:
 					create_ball()
-			if float(f'{clock.get_fps() :.1f}') <= 30 and len(dictionary) != 0:
+			if float(f'{clock.get_fps() :.1f}') <= 30 and len(Dictionary.dictionary) != 0:
 				culling = True
 		else:
-			if float(f'{clock.get_fps() :.1f}') < 50 and len(dictionary) != 0:
+			if float(f'{clock.get_fps() :.1f}') < 50 and len(Dictionary.dictionary) != 0:
 				delete_ball(True)
 			else:
 				culling == False
 		if deleting == True:
-			if len(dictionary) > 0:
+			if len(Dictionary.dictionary) > 0:
 				delete_ball()
 			else:
 				if space == True:
 					space = False
 		screen.fill(Black)
-		draw_text_background(tabbed, shift, space)
+		draw_text_background(tabbed, shift, Dictionary.space)
 		draw_ball()
 		pygame.display.set_caption(f'{clock.get_fps() :.1f}')
 		pygame.display.update()
