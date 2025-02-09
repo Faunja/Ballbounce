@@ -54,6 +54,16 @@ def main():
 						shift = True
 					else:
 						shift = False
+				if event.key == pygame.K_c:
+					if Dictionary.collision == True:
+						Dictionary.collision = False
+					else:
+						Dictionary.collision = True
+				if event.key == pygame.K_f:
+					if Dictionary.friction != 1:
+						Dictionary.friction = 1
+					else:
+						Dictionary.friction = .9
 				if event.key == pygame.K_r:
 					Dictionary.dictionary.clear()
 					space = False
@@ -81,22 +91,22 @@ def main():
 		if culling == False:
 			if creating == True:
 				if float(f'{clock.get_fps() :.1f}') > 45:
-					create_ball()
+					Dictionary.create_ball()
 			if float(f'{clock.get_fps() :.1f}') <= 30 and len(Dictionary.dictionary) != 0:
 				culling = True
 		else:
 			if float(f'{clock.get_fps() :.1f}') < 50 and len(Dictionary.dictionary) != 0:
-				delete_ball(True)
+				Dictionary.delete_ball(True)
 			else:
 				culling == False
 		if deleting == True:
 			if len(Dictionary.dictionary) > 0:
-				delete_ball()
+				Dictionary.delete_ball()
 			else:
 				if space == True:
 					space = False
 		screen.fill(Black)
-		draw_text_background(tabbed, shift, Dictionary.space)
+		draw_text_background(tabbed, shift, Dictionary.space, Dictionary.friction, Dictionary.collision)
 		draw_ball()
 		pygame.display.set_caption(f'{clock.get_fps() :.1f}')
 		pygame.display.update()

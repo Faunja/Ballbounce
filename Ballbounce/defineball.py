@@ -8,10 +8,39 @@ from variables import *
 class Global_Circle:
 	def __init__(self):
 		self.dictionary = []
+		self.friction = .9
+		self.gravity_pull = 5
+		self.collision = True
 		self.pull = False
 		self.push = False
 		self.space = False
 		self.direction = 3
+
+	def create_ball(self):
+		mouse_x, mouse_y = pygame.mouse.get_pos()
+		can_create = True
+		for sphere in self.dictionary:
+			if (math.sqrt((sphere.position[0] - mouse_x)**2 + (sphere.position[1] - mouse_y)**2) <= sphere.radius * 2):
+				can_create = False
+		if can_create == True:
+			mouse_x, mouse_y = pygame.mouse.get_pos()
+			newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
+			for information in range(len(self.dictionary)):
+				if self.dictionary[information].color == newcolor:
+					newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
+					information = 0
+			self.dictionary.append(Circle(newcolor, mouse_x, mouse_y))
+
+	def delete_ball(self, cull = False):
+		if cull == False:
+			mouse_x, mouse_y = pygame.mouse.get_pos()
+			for sphere in self.dictionary:
+				if (math.sqrt((sphere.position[0] - mouse_x)**2 + (sphere.position[1] - mouse_y)**2) <= sphere.radius):
+					self.dictionary.remove(sphere)
+					break
+		else:
+			if len(self.dictionary) != 0:
+				del self.dictionary[random.randrange(len(self.dictionary))]
 
 Dictionary = Global_Circle()
 
@@ -21,7 +50,6 @@ class Circle:
 		self.position = numpy.array([x_place, y_place])
 		self.velocity = numpy.array([0.0, 0.0])
 		self.radius = round(SCREEN_HEIGHT / 24)
-		self.friction = .9
 		self.gravity = [None, None]
 		self.held = False
 		self.sling = False
@@ -79,30 +107,36 @@ class Circle:
 	def gravity_movement(self):
 		if self.gravity[0] != None and self.gravity[1] == None:
 			if self.position[0] < self.gravity[0]:
-				self.velocity[0] += 5
+				self.velocity[0] += Dictionary.gravity_pull
 			elif self.position[0] > self.gravity[0]:
-				self.velocity[0] -= 5
+				self.velocity[0] -= Dictionary.gravity_pull
 		elif self.gravity[1] != None and self.gravity[0] == None:
 			if self.position[1] < self.gravity[1]:
-				self.velocity[1] += 5
+				self.velocity[1] += Dictionary.gravity_pull
 			elif self.position[1] > self.gravity[1]:
-				self.velocity[1] -= 5
+				self.velocity[1] -= Dictionary.gravity_pull
 		elif self.gravity[0] != None and self.gravity[1] != None:
 			difference = [self.gravity[0] - self.position[0], self.gravity[1] - self.position[1]]
-			x_push = 5 * abs(difference[0] / difference[1])
-			y_push = 5 * abs(difference[1] / difference[0])
-			if x_push > 5:
-				x_push = 5
-			if y_push > 5:
-				y_push = 5
-			if self.position[0] < self.gravity[0]:
-				self.velocity[0] += x_push
-			elif self.position[0] > self.gravity[0]:
-				self.velocity[0] -= x_push
-			if self.position[1] < self.gravity[1]:
-				self.velocity[1] += y_push
-			elif self.position[1] > self.gravity[1]:
-				self.velocity[1] -= y_push
+			if difference[1] != 0:
+				x_push = Dictionary.gravity_pull * abs(difference[0] / difference[1])
+				if x_push > Dictionary.gravity_pull:
+					x_push = Dictionary.gravity_pull
+				if self.position[0] < self.gravity[0]:
+					self.velocity[0] += x_push
+				elif self.position[0] > self.gravity[0]:
+					self.velocity[0] -= x_push
+			else:
+				x_push = None
+			if difference[0] != 0:
+				y_push = Dictionary.gravity_pull * abs(difference[1] / difference[0])
+				if y_push > Dictionary.gravity_pull:
+					y_push = Dictionary.gravity_pull
+				if self.position[1] < self.gravity[1]:
+					self.velocity[1] += y_push
+				elif self.position[1] > self.gravity[1]:
+					self.velocity[1] -= y_push
+			else:
+				y_push = None
 
 	def movement(self, mouse_x, mouse_y):
 		if self.held == True:
@@ -117,23 +151,23 @@ class Circle:
 			self.gravity_check()
 			self.gravity_movement()
 			self.position[0] += self.velocity[0]
-			self.velocity[0] *= self.friction
+			self.velocity[0] *= Dictionary.friction
 			self.position[1] += self.velocity[1]
-			self.velocity[1] *= self.friction
+			self.velocity[1] *= Dictionary.friction
 	
-	def collision(self):
+	def wall_collision(self):
 		if self.position[0] - self.radius <= 0:
 			self.position[0] = self.radius
-			self.velocity[0] *= -self.friction
+			self.velocity[0] *= -Dictionary.friction
 		elif self.position[0] + self.radius >= SCREEN_WIDTH:
 			self.position[0] = SCREEN_WIDTH - self.radius
-			self.velocity[0] *= -self.friction
+			self.velocity[0] *= -Dictionary.friction
 		if self.position[1] - self.radius <= 0:
 			self.position[1] = self.radius
-			self.velocity[1] *= -self.friction
+			self.velocity[1] *= -Dictionary.friction
 		elif self.position[1] + self.radius >= SCREEN_HEIGHT:
 			self.position[1] = SCREEN_HEIGHT - self.radius
-			self.velocity[1] *= -self.friction
+			self.velocity[1] *= -Dictionary.friction
 	
 	def ball_collision(self, sphere):
 		if self.check_ball_collision(sphere) == False:
