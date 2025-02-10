@@ -14,6 +14,7 @@ def main():
 	creating = False
 	deleting = False
 	culling = False
+	time_since_cull = 0
 	shift = False
 	tabbed = False
 	while run:
@@ -96,15 +97,17 @@ def main():
 				culling = True
 		else:
 			if float(f'{clock.get_fps() :.1f}') < 50 and len(Dictionary.dictionary) != 0:
-				Dictionary.delete_ball(True)
+				time_since_cull += 1
+				if time_since_cull == 1:
+					Dictionary.delete_ball(True)
+				elif time_since_cull == round(FPS / 4):
+					time_since_cull = 0
 			else:
-				culling == False
+				culling = False
+				time_since_cull = 0
 		if deleting == True:
 			if len(Dictionary.dictionary) > 0:
 				Dictionary.delete_ball()
-			else:
-				if space == True:
-					space = False
 		screen.fill(Black)
 		draw_text_background(tabbed, shift, Dictionary.space, Dictionary.friction, Dictionary.collision)
 		draw_ball()

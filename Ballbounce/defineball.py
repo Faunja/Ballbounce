@@ -19,9 +19,10 @@ class Global_Circle:
 	def create_ball(self):
 		mouse_x, mouse_y = pygame.mouse.get_pos()
 		can_create = True
-		for sphere in self.dictionary:
-			if (math.sqrt((sphere.position[0] - mouse_x)**2 + (sphere.position[1] - mouse_y)**2) <= sphere.radius * 2):
-				can_create = False
+		if self.collision == True:
+			for sphere in self.dictionary:
+				if (math.sqrt((sphere.position[0] - mouse_x)**2 + (sphere.position[1] - mouse_y)**2) <= sphere.radius * 2):
+					can_create = False
 		if can_create == True:
 			mouse_x, mouse_y = pygame.mouse.get_pos()
 			newcolor = (random.randint(60, 255), random.randint(60, 255), random.randint(60, 255))
@@ -39,8 +40,10 @@ class Global_Circle:
 					self.dictionary.remove(sphere)
 					break
 		else:
-			if len(self.dictionary) != 0:
-				del self.dictionary[random.randrange(len(self.dictionary))]
+			if len(self.dictionary) != 1:
+				initial_dictionary = len(self.dictionary)
+				while round(initial_dictionary / 2) < len(self.dictionary):
+					del self.dictionary[random.randrange(len(self.dictionary))]
 
 Dictionary = Global_Circle()
 
