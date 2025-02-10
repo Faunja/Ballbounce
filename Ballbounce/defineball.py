@@ -9,10 +9,10 @@ class Global_Circle:
 	def __init__(self):
 		self.dictionary = []
 		self.friction = .9
-		self.gravity_pull = 5
+		self.gravity_pulled = 5
 		self.collision = True
-		self.pull = False
-		self.push = False
+		self.pulled = False
+		self.pushed = False
 		self.space = False
 		self.direction = 3
 
@@ -56,6 +56,8 @@ class Circle:
 		self.gravity = [None, None]
 		self.held = False
 		self.sling = False
+		self.pull = False
+		self.push = False
 
 	def check_wall_collision(self):
 		if self.position[0] - self.radius <= 0:
@@ -86,15 +88,15 @@ class Circle:
 					return True
 			return False
 
-	def gravity_check(self):
-		if Dictionary.pull == True:
+	def check_gravity(self):
+		if Dictionary.pulled == True:
 			self.gravity[0], self.gravity[1] = pygame.mouse.get_pos()
-		if Dictionary.push == True:
+		if Dictionary.pushed == True:
 			mouse_x, mouse_y = pygame.mouse.get_pos()
 			difference = [mouse_x - self.position[0], mouse_y - self.position[1]]
 			self.gravity[0] = self.position[0] - difference[0]
 			self.gravity[1] = self.position[1] - difference[1]
-		if Dictionary.pull == False and Dictionary.push == False:
+		if Dictionary.pulled == False and Dictionary.pushed == False:
 			if Dictionary.space == False:
 				if Dictionary.direction == 1:
 					self.gravity = [None, 0]
@@ -110,36 +112,36 @@ class Circle:
 	def gravity_movement(self):
 		if self.gravity[0] != None and self.gravity[1] == None:
 			if self.position[0] < self.gravity[0]:
-				self.velocity[0] += Dictionary.gravity_pull
+				self.velocity[0] += Dictionary.gravity_pulled
 			elif self.position[0] > self.gravity[0]:
-				self.velocity[0] -= Dictionary.gravity_pull
+				self.velocity[0] -= Dictionary.gravity_pulled
 		elif self.gravity[1] != None and self.gravity[0] == None:
 			if self.position[1] < self.gravity[1]:
-				self.velocity[1] += Dictionary.gravity_pull
+				self.velocity[1] += Dictionary.gravity_pulled
 			elif self.position[1] > self.gravity[1]:
-				self.velocity[1] -= Dictionary.gravity_pull
+				self.velocity[1] -= Dictionary.gravity_pulled
 		elif self.gravity[0] != None and self.gravity[1] != None:
 			difference = [self.gravity[0] - self.position[0], self.gravity[1] - self.position[1]]
 			if difference[1] != 0:
-				x_push = Dictionary.gravity_pull * abs(difference[0] / difference[1])
-				if x_push > Dictionary.gravity_pull:
-					x_push = Dictionary.gravity_pull
+				x_pushed = Dictionary.gravity_pulled * abs(difference[0] / difference[1])
+				if x_pushed > Dictionary.gravity_pulled:
+					x_pushed = Dictionary.gravity_pulled
 				if self.position[0] < self.gravity[0]:
-					self.velocity[0] += x_push
+					self.velocity[0] += x_pushed
 				elif self.position[0] > self.gravity[0]:
-					self.velocity[0] -= x_push
+					self.velocity[0] -= x_pushed
 			else:
-				x_push = None
+				x_pushed = None
 			if difference[0] != 0:
-				y_push = Dictionary.gravity_pull * abs(difference[1] / difference[0])
-				if y_push > Dictionary.gravity_pull:
-					y_push = Dictionary.gravity_pull
+				y_pushed = Dictionary.gravity_pulled * abs(difference[1] / difference[0])
+				if y_pushed > Dictionary.gravity_pulled:
+					y_pushed = Dictionary.gravity_pulled
 				if self.position[1] < self.gravity[1]:
-					self.velocity[1] += y_push
+					self.velocity[1] += y_pushed
 				elif self.position[1] > self.gravity[1]:
-					self.velocity[1] -= y_push
+					self.velocity[1] -= y_pushed
 			else:
-				y_push = None
+				y_pushed = None
 
 	def movement(self, mouse_x, mouse_y):
 		if self.held == True:
@@ -151,7 +153,7 @@ class Circle:
 			self.velocity[0] = (mouse_x - self.position[0]) / 5
 			self.velocity[1] = (mouse_y - self.position[1]) / 5
 		else:
-			self.gravity_check()
+			self.check_gravity()
 			self.gravity_movement()
 			self.position[0] += self.velocity[0]
 			self.velocity[0] *= Dictionary.friction

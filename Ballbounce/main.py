@@ -25,19 +25,19 @@ def main():
 					if shift == False:
 						grab_ball(True)
 					else:
-						Dictionary.pull = True
+						Dictionary.pulled = True
 				if event.button == 3:
 					if shift == False:
 						sling_ball(True)
 					else:
-						Dictionary.push = True
+						Dictionary.pushed = True
 			if event.type == pygame.MOUSEBUTTONUP:
 				if event.button == 1:
 					grab_ball(False)
-					Dictionary.pull = False
+					Dictionary.pulled = False
 				if event.button == 3:
 					sling_ball(False)
-					Dictionary.push = False
+					Dictionary.pushed = False
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
 					run = False
@@ -67,7 +67,15 @@ def main():
 						Dictionary.friction = .9
 				if event.key == pygame.K_r:
 					Dictionary.dictionary.clear()
-					space = False
+				if event.key == pygame.K_g:
+					for sphere in Dictionary.dictionary:
+						if sphere.held == True:
+							if sphere.pull == False and sphere.push == False:
+								sphere.pull = True
+							elif sphere.push == True:
+								sphere.push = False
+							elif sphere.pull == True:
+								sphere.pull = False
 				if event.key == pygame.K_SPACE:
 					if Dictionary.space == False:
 						Dictionary.space = True

@@ -40,7 +40,11 @@ def sling_ball(click):
 def draw_ball():
 	slinged = None
 	for sphere in Dictionary.dictionary:
-		pygame.draw.circle(screen, sphere.color, (sphere.position[0], sphere.position[1]), sphere.radius)
+		if sphere.pull == True or sphere.push == True:
+			pygame.draw.circle(screen, White, (sphere.position[0], sphere.position[1]), sphere.radius)
+			pygame.draw.circle(screen, sphere.color, (sphere.position[0], sphere.position[1]), sphere.radius * (4 / 5))
+		else:
+			pygame.draw.circle(screen, sphere.color, (sphere.position[0], sphere.position[1]), sphere.radius)
 		if sphere.sling == True:
 			slinged = sphere
 		update_ball(sphere)
