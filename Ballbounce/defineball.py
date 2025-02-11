@@ -58,7 +58,7 @@ class Circle:
 		self.sling = False
 		self.pull = False
 		self.push = False
-
+	
 	def check_wall_collision(self):
 		if self.position[0] - self.radius <= 0:
 			return True
@@ -70,6 +70,20 @@ class Circle:
 			return True
 		return False
 
+	def wall_collision(self):
+		if self.position[0] - self.radius <= 0:
+			self.position[0] = self.radius
+			self.velocity[0] *= -Dictionary.friction
+		elif self.position[0] + self.radius >= SCREEN_WIDTH:
+			self.position[0] = SCREEN_WIDTH - self.radius
+			self.velocity[0] *= -Dictionary.friction
+		if self.position[1] - self.radius <= 0:
+			self.position[1] = self.radius
+			self.velocity[1] *= -Dictionary.friction
+		elif self.position[1] + self.radius >= SCREEN_HEIGHT:
+			self.position[1] = SCREEN_HEIGHT - self.radius
+			self.velocity[1] *= -Dictionary.friction
+	
 	def check_ball_collision(self, sphere = None):
 		if sphere != None:
 			difference = self.position - sphere.position
@@ -81,13 +95,48 @@ class Circle:
 				return False
 		else:
 			for sphere in Dictionary.dictionary:
+				if sphere.color == self.color:
+					continue
 				difference = self.position - sphere.position
 				distance = math.sqrt(difference[0]**2 + difference[1]**2)
 				push_radius = self.radius + sphere.radius
-				if (distance <= push_radius):
+				if distance <= push_radius:
 					return True
 			return False
 
+	def ball_collision(self, sphere):
+		if self.check_ball_collision(sphere) == False:
+			return
+		difference = self.position - sphere.position
+		distance = math.sqrt(difference[0]**2 + difference[1]**2)
+		push_radius = self.radius + sphere.radius
+		offset = 1 - distance / push_radius
+		if self.held == True or self.sling == True or self.check_wall_collision() == True:
+			sphere.position = sphere.position - difference * offset
+		elif sphere.held == True or sphere.sling == True or sphere.check_wall_collision() == True:
+			self.position = self.position + difference * offset
+		else:
+			self.position = self.position + difference * offset
+			sphere.position = sphere.position - difference * offset
+
+		if self.sling == False and sphere.sling == False:
+			mass = [sphere.radius * 2 / (sphere.radius + self.radius), self.radius * 2 / (self.radius + sphere.radius)]
+			selfposition = self.position - sphere.position
+			sphereposition = sphere.position - self.position
+			selfnumerator = numpy.inner(self.velocity - sphere.velocity, selfposition)
+			spherenumerator = numpy.inner(sphere.velocity - self.velocity, sphereposition)
+			selfdenominator = numpy.linalg.norm(selfposition) ** 2
+			spheredenominator = numpy.linalg.norm(sphereposition) ** 2
+			
+			if selfdenominator != 0 and spheredenominator != 0:
+				self.velocity = self.velocity - mass[0] * (selfnumerator / selfdenominator) * selfposition
+				sphere.velocity = sphere.velocity - mass[1] * (spherenumerator / spheredenominator) * sphereposition
+			else:
+				self.position = numpy.array([random.randrange(round(self.radius), SCREEN_WIDTH), random.randrange(round(self.radius), SCREEN_HEIGHT)])
+				while self.check_ball_collision == True:
+					self.position = numpy.array([random.randrange(round(self.radius), SCREEN_WIDTH), random.randrange(round(self.radius), SCREEN_HEIGHT)])
+				self.velocity = numpy.array([0.0, 0.0])
+	
 	def check_gravity(self):
 		if Dictionary.pulled == True:
 			self.gravity[0], self.gravity[1] = pygame.mouse.get_pos()
@@ -142,8 +191,14 @@ class Circle:
 					self.velocity[1] -= y_pushed
 			else:
 				y_pushed = None
-
+	
 	def movement(self, mouse_x, mouse_y):
+		can_check_collision = False
+		for sphere in Dictionary.dictionary:
+			if can_check_collision == True:
+				self.ball_collision(sphere)
+			if sphere.color == self.color:
+				can_check_collision = True
 		if self.held == True:
 			self.velocity[0] = mouse_x - self.position[0]
 			self.position[0] = mouse_x
@@ -159,54 +214,7 @@ class Circle:
 			self.velocity[0] *= Dictionary.friction
 			self.position[1] += self.velocity[1]
 			self.velocity[1] *= Dictionary.friction
-	
-	def wall_collision(self):
-		if self.position[0] - self.radius <= 0:
-			self.position[0] = self.radius
-			self.velocity[0] *= -Dictionary.friction
-		elif self.position[0] + self.radius >= SCREEN_WIDTH:
-			self.position[0] = SCREEN_WIDTH - self.radius
-			self.velocity[0] *= -Dictionary.friction
-		if self.position[1] - self.radius <= 0:
-			self.position[1] = self.radius
-			self.velocity[1] *= -Dictionary.friction
-		elif self.position[1] + self.radius >= SCREEN_HEIGHT:
-			self.position[1] = SCREEN_HEIGHT - self.radius
-			self.velocity[1] *= -Dictionary.friction
-	
-	def ball_collision(self, sphere):
-		if self.check_ball_collision(sphere) == False:
-			return
-		difference = self.position - sphere.position
-		distance = math.sqrt(difference[0]**2 + difference[1]**2)
-		push_radius = self.radius + sphere.radius
-		offset = 1 - distance / push_radius
-		if self.held == True or self.sling == True or self.check_wall_collision() == True:
-			sphere.position = sphere.position - difference * offset
-		elif sphere.held == True or sphere.sling == True or sphere.check_wall_collision() == True:
-			self.position = self.position + difference * offset
-		else:
-			self.position = self.position + difference * offset
-			sphere.position = sphere.position - difference * offset
-
-		if self.sling == False and sphere.sling == False:
-			mass = [sphere.radius * 2 / (sphere.radius + self.radius), self.radius * 2 / (self.radius + sphere.radius)]
-			selfposition = self.position - sphere.position
-			sphereposition = sphere.position - self.position
-			selfnumerator = numpy.inner(self.velocity - sphere.velocity, selfposition)
-			spherenumerator = numpy.inner(sphere.velocity - self.velocity, sphereposition)
-			selfdenominator = numpy.linalg.norm(selfposition) ** 2
-			spheredenominator = numpy.linalg.norm(sphereposition) ** 2
-			
-			if selfdenominator != 0 and spheredenominator != 0:
-				self.velocity = self.velocity - mass[0] * (selfnumerator / selfdenominator) * selfposition
-				sphere.velocity = sphere.velocity - mass[1] * (spherenumerator / spheredenominator) * sphereposition
-			else:
-				self.position = numpy.array([random.randrange(round(self.radius), SCREEN_WIDTH), random.randrange(round(self.radius), SCREEN_HEIGHT)])
-				while self.check_ball_collision == True:
-					self.position = numpy.array([random.randrange(round(self.radius), SCREEN_WIDTH), random.randrange(round(self.radius), SCREEN_HEIGHT)])
-				self.velocity = numpy.array([0.0, 0.0])
-
+		self.wall_collision()
 
 
 

@@ -4,18 +4,6 @@
 # Licensed under the terms of the GPL 3
 import pygame, math, random
 from defineball import *
-		
-def update_ball(sphere):
-	mouse_x, mouse_y = pygame.mouse.get_pos()
-	if Dictionary.collision == True:
-		can_collide = False
-		for cylinder in Dictionary.dictionary:
-			if can_collide == True:
-				sphere.ball_collision(cylinder)
-			if cylinder.color == sphere.color:
-				can_collide = True
-	sphere.movement(mouse_x, mouse_y)
-	sphere.wall_collision()
 
 def grab_ball(click):
 	mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -38,6 +26,7 @@ def sling_ball(click):
 			sphere.sling = False
 
 def draw_ball():
+	mouse_x, mouse_y = pygame.mouse.get_pos()
 	slinged = None
 	for sphere in Dictionary.dictionary:
 		if sphere.pull == True or sphere.push == True:
@@ -47,9 +36,8 @@ def draw_ball():
 			pygame.draw.circle(screen, sphere.color, (sphere.position[0], sphere.position[1]), sphere.radius)
 		if sphere.sling == True:
 			slinged = sphere
-		update_ball(sphere)
+		sphere.movement(mouse_x, mouse_y)
 	if slinged != None:
-		mouse_x, mouse_y = pygame.mouse.get_pos()
 		pygame.draw.circle(screen, slinged.color, (mouse_x, mouse_y), slinged.radius / 2)
 			
 
