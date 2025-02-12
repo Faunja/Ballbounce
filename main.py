@@ -3,7 +3,7 @@
 # Copyright 2025
 # Licensed under the terms of the GPL 3
 # If pygame is not installed: sudo apt install python3-pygame
-# To run: python3 Idlegame/main.py
+# To run: python3 Ballbounce/main.py
 import pygame
 from ball import *
 from variables import *
