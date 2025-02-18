@@ -193,12 +193,13 @@ class Circle:
 				y_pushed = None
 	
 	def movement(self, mouse_x, mouse_y):
-		can_check_collision = False
-		for sphere in Dictionary.dictionary:
-			if can_check_collision == True:
-				self.ball_collision(sphere)
-			if sphere.color == self.color:
-				can_check_collision = True
+		if Dictionary.collision == True:
+			can_check_collision = False
+			for sphere in Dictionary.dictionary:
+				if can_check_collision == True:
+					self.ball_collision(sphere)
+				if sphere.color == self.color:
+					can_check_collision = True
 		if self.held == True:
 			self.velocity[0] = mouse_x - self.position[0]
 			self.position[0] = mouse_x
